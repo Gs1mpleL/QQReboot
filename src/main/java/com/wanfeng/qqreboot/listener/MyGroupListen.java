@@ -1,6 +1,7 @@
 package com.wanfeng.qqreboot.listener;
 
 
+import com.wanfeng.qqreboot.Controller.BaseController;
 import com.wanfeng.qqreboot.handler.KunkunHandler;
 import love.forte.common.ioc.annotation.Beans;
 import love.forte.simbot.annotation.Filter;
@@ -8,16 +9,19 @@ import love.forte.simbot.annotation.OnGroup;
 import love.forte.simbot.api.message.MessageContent;
 import love.forte.simbot.api.message.MessageContentBuilder;
 import love.forte.simbot.api.message.MessageContentBuilderFactory;
+import love.forte.simbot.api.message.containers.GroupInfo;
 import love.forte.simbot.api.message.events.GroupMsg;
 import love.forte.simbot.api.sender.Sender;
-import love.forte.simbot.core.SimbotContext;
 import love.forte.simbot.filter.MatchType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 群消息监听的示例类。
@@ -32,10 +36,18 @@ public class MyGroupListen {
     private static final Logger LOG = LoggerFactory.getLogger(MyGroupListen.class);
     @Autowired
     private MessageContentBuilderFactory messageContentBuilderFactory;
-    private final Map<String, Set<String>> aikunMap = new HashMap<>();
-    @Autowired
-    private SimbotContext simbotContext;
 
+
+
+    @OnGroup
+    @Filter("注册")
+    public void registerGroup(GroupMsg groupMsg, Sender sender){
+        GroupInfo groupInfo = groupMsg.getGroupInfo();
+        BaseController.groupCache.add(groupInfo.getGroupCode());
+        sender.sendGroupMsg(groupInfo.getGroupCode(),"注册成功");
+    }
+
+    private final Map<String, Set<String>> aikunMap = new HashMap<>();
     @OnGroup
     @Filter(value = ".*[鸡|鸽|律师|哎哟|你干嘛].*", matchType = MatchType.REGEX_MATCHES)
     public void onGroupMsg(GroupMsg groupMsg, Sender sender) {
@@ -52,4 +64,6 @@ public class MyGroupListen {
         MessageContent build1 = msgBuilder.clear().text(sb.toString()).build();
         sender.sendGroupMsg(groupMsg, build1);
     }
+
+
 }

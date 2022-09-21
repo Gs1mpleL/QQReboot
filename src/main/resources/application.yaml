@@ -1,7 +1,11 @@
 logging:
   level:
     love.forte: debug
-simbot:
-  core:
-    bot-resource-type: both
-
+#simbot:
+#  core:
+#    bot-resource-type: 3123097202:liuzhuohao123
+server:
+  port: 9999
+spring:
+  main:
+    allow-circular-references: true
