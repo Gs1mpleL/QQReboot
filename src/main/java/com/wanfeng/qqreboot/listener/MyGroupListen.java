@@ -2,6 +2,7 @@ package com.wanfeng.qqreboot.listener;
 
 
 import com.wanfeng.qqreboot.Controller.BaseController;
+import com.wanfeng.qqreboot.domain.LaoPo;
 import com.wanfeng.qqreboot.handler.KunkunHandler;
 import love.forte.common.ioc.annotation.Beans;
 import love.forte.simbot.annotation.Filter;
@@ -50,7 +51,7 @@ public class MyGroupListen {
     private final Map<String, Set<String>> aikunMap = new HashMap<>();
     @OnGroup
     @Filter(value = ".*[鸡|鸽|律师|哎哟|你干嘛].*", matchType = MatchType.REGEX_MATCHES)
-    public void onGroupMsg(GroupMsg groupMsg, Sender sender) {
+    public void xiaoHeiZiFilter(GroupMsg groupMsg, Sender sender) {
         MessageContentBuilder msgBuilder = messageContentBuilderFactory.getMessageContentBuilder();
         MessageContent build = msgBuilder.text(KunkunHandler.getOne() + groupMsg.getAccountInfo().getAccountNickname()).face(1).build();
         sender.sendGroupMsg(groupMsg, build);
@@ -65,5 +66,9 @@ public class MyGroupListen {
         sender.sendGroupMsg(groupMsg, build1);
     }
 
-
+    @OnGroup
+    @Filter(value = ".*老婆.*",matchType = MatchType.REGEX_MATCHES)
+    public void laoPoFilter(GroupMsg groupMsg, Sender sender){
+        sender.sendGroupMsg(groupMsg.getGroupInfo().getGroupCode(),new LaoPo().toString(groupMsg.getAccountInfo().getAccountNickname()));
+    }
 }
